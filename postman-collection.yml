@@ -68,7 +68,7 @@ paths:
                   success:
                     type: boolean
                     example: false
-  /get-status:
+  /get-state:
     get:
       summary: Get current device state
       description: Returns the current stored MQTT state from status.json
@@ -89,6 +89,49 @@ paths:
                   pico/led/brightness: 75
         '500':
           description: Server error retrieving status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+  /weather:
+    get:
+      summary: Get current weather data
+      description: Returns current weather data for a fixed location using OpenWeatherMap API.
+      responses:
+        '200':
+          description: Weather data returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weather:
+                    type: array
+                    items:
+                      type: object
+                  main:
+                    type: object
+                  wind:
+                    type: object
+                  name:
+                    type: string
+                example:
+                  weather:
+                    - description: "clear sky"
+                      icon: "01d"
+                  main:
+                    temp: 293.55
+                    humidity: 56
+                  wind:
+                    speed: 3.6
+                  name: "London"
+        '500':
+          description: Error retrieving weather data
           content:
             application/json:
               schema:

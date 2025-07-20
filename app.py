@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify, request
+import requests
 import subprocess
 import json
 import os
+from secrets import WEATHER_API_KEY
 
 app = Flask(__name__)
 
@@ -35,8 +37,7 @@ def index():
 
 @app.route('/get-state', methods=['GET'])
 def get_state():
-    global last_values
-    return jsonify(last_values)
+    return jsonify(load_state())
 
 @app.route('/control-device', methods=['POST'])
 def control_device():
@@ -56,5 +57,12 @@ def control_device():
     else:
         return jsonify(success=False), 500
 
+
+@app.route('/weather', methods=['GET'])
+def weather():
+    weather_url = 'https://api.openweathermap.org/data/2.5/weather?lat=51.39532529262788&lon=0.008861501686488386&appid=' + WEATHER_API_KEY
+    weather = requests.get(weather_url).json()
+
+    return jsonify(weather)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

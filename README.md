@@ -1,9 +1,12 @@
 
-# 🔌 Device Control API – Documentation
+# 🔌 Home API – Documentation
 
-This API enables you to send MQTT messages to control devices via a unified endpoint. The backend uses a local Mosquitto broker to publish messages and stores device state persistently in a JSON file (`state.json`).
+This API has multiple utilities. 
 
-It is designed to interface with any MQTT subscriber, device code is [here](https://github.com/OajMeredith23/smart-home-devices)
+- It allows you to send MQTT messages to control devices via a unified endpoint. The backend uses a local Mosquitto broker to publish messages and stores device state persistently in a JSON file (`state.json`). It is designed to interface with any MQTT subscriber, custom device code is [here](https://github.com/OajMeredith23/smart-home-devices)
+- It has endpoints that return datasets. Like the `/weather` endpoint that returns weather data for Bromley.
+
+For more details and example on available endpoints import the `postman-collection.yml` file into Postman.
 ---
 
 ## Getting started 
@@ -11,9 +14,12 @@ It is designed to interface with any MQTT subscriber, device code is [here](http
 There's very little to configure here. 
 
 - Ensure you have python3 installed correctly
-- Create a `state.json` file at the root of this project containing an empty object. This wil be populated by MQTT requests and there messages. 
+- Create a `state.json` file at the root of this project containing an empty object. This wil be populated by MQTT requests and their messages. 
+- Create a `secrets.json` file and add your [openweathermap API key](https://home.openweathermap.org) to a variable called `WEATHER_API_KEY`
 
-## 📍 Endpoint
+Using MQTT 
+
+## 📍 Control device endpoint
 
 ```
 POST /control-device
