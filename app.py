@@ -33,7 +33,7 @@ def publish_message(message, topic):
 
 @app.route('/')
 def index():
-    return render_template('index.html', state=last_values)
+    return render_template('index.html', state=load_state())
 
 @app.route('/get-state', methods=['GET'])
 def get_state():
@@ -46,9 +46,16 @@ def control_device():
     topic = data.get('topic')
     value = data.get('value')
 
+   
+
     if not topic or value is None:
         return jsonify(success=False, error="Missing 'topic' or 'value'"), 400
 
+    # Derive the device name from the first segment of the topic
+    device = topic.split('/')[0] if topic else None
+    if load_state()[f"{device}/status"] == 'offline':
+        return jsonify(success=False, error=f"Device {device} is offline."), 503
+        
     success = publish_message(value, topic)
     if success:
         last_values[topic] = value

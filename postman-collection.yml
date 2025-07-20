@@ -68,6 +68,19 @@ paths:
                   success:
                     type: boolean
                     example: false
+        '503':
+          description: Device is offline
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Device `device-name` is offline.
   /get-state:
     get:
       summary: Get current device state
