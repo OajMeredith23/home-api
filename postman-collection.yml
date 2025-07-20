@@ -68,3 +68,32 @@ paths:
                   success:
                     type: boolean
                     example: false
+  /get-status:
+    get:
+      summary: Get current device state
+      description: Returns the current stored MQTT state from status.json
+      responses:
+        '200':
+          description: Current device state returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                    - type: boolean
+                example:
+                  pico/led: "on"
+                  pico/led/brightness: 75
+        '500':
+          description: Server error retrieving status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false

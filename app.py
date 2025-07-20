@@ -33,6 +33,10 @@ def publish_message(message, topic):
 def index():
     return render_template('index.html', state=last_values)
 
+@app.route('/get-state', methods=['GET'])
+def get_state():
+    global last_values
+    return jsonify(last_values)
 
 @app.route('/control-device', methods=['POST'])
 def control_device():
