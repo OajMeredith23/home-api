@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: MQTT Device Control API
+  version: 1.0.0
+  description: API to send MQTT messages to control devices via Mosquitto broker on Raspberry Pi.
+
+servers:
+  - url: http://pi5.local:5000
+    description: Local Flask server
+
+paths:
+  /control-device:
+    post:
+      summary: Publish a message to an MQTT topic
+      description: Sends a message to the specified MQTT topic and saves state persistently.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - topic
+                - value
+              properties:
+                topic:
+                  type: string
+                  description: MQTT topic to publish to (e.g., pico/led/brightness)
+                  example: pico/led/brightness
+                value:
+                  description: Value/message to publish to the topic (string or number)
+                  oneOf:
+                    - type: string
+                      example: "on"
+                    - type: integer
+                      example: 75
+      responses:
+        '200':
+          description: Message published successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Missing 'topic' or 'value'
+        '500':
+          description: MQTT publishing failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false

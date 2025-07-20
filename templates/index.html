@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LED Control Dashboard</title>
+     
+</head>
+<body>
+    <h1>LED Toggle Dashboard</h1>
+    <button id="toggle-btn">Toggle</button>
+
+    
+    <h2>Brightness Control</h2>
+    <input type="range" id="brightness-slider" min="0" max="100">
+    <span id="brightness-value"></span>
+
+      <!-- Inject state from Flask -->
+    <script>
+      const deviceState =JSON.parse('{{ state | tojson }}');
+    </script>
+    <script src="{{ url_for('static', filename='toggle.js') }}"></script>
+
+</body>
+</html>
