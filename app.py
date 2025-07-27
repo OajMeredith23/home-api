@@ -55,7 +55,7 @@ def control_device():
     device = topic.split('/')[0] if topic else None
     if load_state()[f"{device}/status"] == 'offline':
         return jsonify(success=False, error=f"Device {device} is offline."), 503
-        
+
     success = publish_message(value, topic)
     if success:
         last_values[topic] = value
@@ -67,7 +67,7 @@ def control_device():
 
 @app.route('/weather', methods=['GET'])
 def weather():
-    weather_url = 'https://api.openweathermap.org/data/2.5/weather?lat=51.39532529262788&lon=0.008861501686488386&appid=' + WEATHER_API_KEY
+    weather_url = f'https://api.openweathermap.org/data/2.5/weather?lat=51.39532529262788&lon=0.008861501686488386&&appid={WEATHER_API_KEY}&units=metric'
     weather = requests.get(weather_url).json()
 
     return jsonify(weather)

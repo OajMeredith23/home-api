@@ -31,9 +31,12 @@ paths:
                   description: Value/message to publish to the topic (string or number)
                   oneOf:
                     - type: string
-                      example: "on"
+                      example: "50"
                     - type: integer
                       example: 75
+            example:
+              topic: pico/relay
+              value: "on"
       responses:
         '200':
           description: Message published successfully
