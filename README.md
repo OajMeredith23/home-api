@@ -15,7 +15,7 @@ There's very little to configure here.
 
 - Ensure you have python3 installed correctly
 - Create a `state.json` file at the root of this project containing an empty object. This wil be populated by MQTT requests and their messages. 
-- Create a `secrets.json` file and add your [openweathermap API key](https://home.openweathermap.org) to a variable called `WEATHER_API_KEY`
+- Create a `env.py` file and add your [openweathermap API key](https://home.openweathermap.org) to a variable called `WEATHER_API_KEY`
 
 
 # Getting Started: Running the API and MQTT Listener as systemd Services
@@ -49,6 +49,86 @@ source venv/bin/activate
 pip install -r requirements.txt
 deactivate
 ```
+
+Alternatively, you can use the provided `Makefile` which automates setup and common development tasks (recommended).
+
+## Using the Makefile (recommended)
+
+This repository includes a `Makefile` with targets to create virtual environments, install dependencies, run the API and MQTT listener in development mode, and manage production systemd services. It uses these default venv names:
+
+- `venv-dev` — development virtual environment used by `make setup` and `make dev`
+- `venv-api` — production virtual environment for the API (used by systemd/service files)
+- `venv-mqtt` — production virtual environment for the MQTT listener (used by systemd/service files)
+
+Common targets:
+
+- `make setup` — create `venv-dev`, install dependencies from `requirements.txt`, install `watchfiles`, and ensure `state.json` and a placeholder `env.py` exist.
+- `make dev` — stop the `device-api` and `mqtt-listener` systemd services (if running) and start the Flask API and MQTT listener in development mode using `venv-dev` (auto-reload / auto-restart behavior).
+- `make prod` — start the production systemd services (`device-api` and `mqtt-listener`).
+- `make stop-dev` — stop development processes started by `make dev`.
+- `make diagnostics` — run quick status checks for systemd services, dev processes, and listeners.
+- `make logs` — stream production API logs if the `device-api` service is running under systemd.
+
+Quick examples:
+
+```bash
+# Run initial project setup (creates venv-dev and placeholder env.py)
+make setup
+
+# Start the API and MQTT listener in development mode (uses venv-dev)
+make dev
+
+# Stop development processes
+make stop-dev
+
+# Show quick diagnostics
+make diagnostics
+
+# Stream production API logs (if running under systemd)
+make logs
+```
+
+Notes:
+
+- After `make setup` add your OpenWeatherMap API key to `env.py` as:
+
+```python
+WEATHER_API_KEY = "your_api_key_here"
+```
+
+- `state.json` will be created by `make setup` if missing and stores device state persisted by the API.
+- `make dev` stops systemd services so the dev-run processes can bind to the standard ports (like :5000).
+
+### Local development with `make dev`
+
+`make dev` is the recommended way to run the API and MQTT listener locally while developing. It does the following:
+
+- Stops the production systemd services `device-api` and `mqtt-listener` (if they are running) so the dev processes can bind to port 5000 and any MQTT ports without conflict.
+- Starts the Flask API (`app.py`) and the development MQTT listener (`run_mqtt_dev.py`) using the `venv-dev` virtual environment.
+- Runs both processes in the foreground so you see logs in your terminal. The Makefile launches them and waits; use the same terminal session to observe output.
+
+How to run:
+
+```bash
+# Ensure you have run setup once (creates venv-dev and installs deps)
+make setup
+
+# Start the dev servers (press Ctrl+C to stop or use `make stop-dev` from another shell)
+make dev
+```
+
+Stopping and troubleshooting:
+
+- To stop dev mode from another terminal use:
+
+```bash
+make stop-dev
+```
+
+- If the dev processes don't start, check `state.json` exists and `env.py` contains `WEATHER_API_KEY` (or an empty placeholder is fine for local testing).
+- If ports are in use, run `make stop-dev` and verify systemd services are stopped or use `sudo lsof -i :5000` to find conflicting processes.
+
+Tip: Run `make diagnostics` to get quick status information about systemd services and development processes.
 
 ### Step 3: Create systemd service files
 
