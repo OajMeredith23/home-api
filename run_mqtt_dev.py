@@ -12,8 +12,11 @@ def run():
 if __name__ == "__main__":
     process = run()
 
-    # Watch the entire project folder for changes
-    for changes in watch('.'):
+    # Watch the .py files for changes
+    def _py_filter(change, path):
+        return path.endswith('.py')
+
+    for changes in watch('.', watch_filter=_py_filter):
         print("Changes detected:", changes)
         process.terminate()
         process.wait()
