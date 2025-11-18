@@ -47,7 +47,8 @@ def control_device():
     value = data.get('value')
 
    
-
+    print(f"Received control request: topic={topic}, value={value}")
+    
     if not topic or value is None:
         return jsonify(success=False, error="Missing 'topic' or 'value'"), 400
 
@@ -62,6 +63,7 @@ def control_device():
         save_state(last_values)
         return jsonify(success=True)
     else:
+        print("Failed to publish MQTT message.")
         return jsonify(success=False), 500
 
 

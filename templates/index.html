@@ -13,7 +13,9 @@
     <h2>Brightness Control</h2>
     <input type="range" id="brightness-slider" min="0" max="100">
     <span id="brightness-value"></span>
-
+    
+    <!-- Not covered in documentation as is a personal experiment that will be removed later, using mjpg-streamer to stream from a webcam. -->
+    <img src="http://pi5.local:8080/?action=stream" />
       <!-- Inject state from Flask -->
     <script>
       const deviceState =JSON.parse('{{ state | tojson }}');
