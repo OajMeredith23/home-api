@@ -1,5 +1,7 @@
 state.json
 secrets.py
+env.py
 /venv
 /venv-dev
 __pycache__
+env.py
